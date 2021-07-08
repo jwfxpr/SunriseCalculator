@@ -120,9 +120,14 @@ namespace SunriseCalculator.Classes
         private double EquatorialYCoordinate => EclipticRectangularYCoordinate * Math.Cos(ObliquityOfEcliptic);
 
         /// <summary>
-        /// The Sun's apparent radius from Earth on the given day.
+        /// The Sun's apparent radius from Earth on the given day, in degrees.
         /// </summary>
-        public double ApparentRadius => 0.2666 / DistanceToSun;
+        public double ApparentRadiusDegrees => 0.2666 / DistanceToSun;
+
+        /// <summary>
+        /// The Sun's apparent radius from Earth on the given day, in radians.
+        /// </summary>
+        public double ApparentRadiusRadians => ApparentRadiusDegrees * DegRad;
 
         /// <summary>
         /// Gets the date for which this instance is calculated. Calculations should be accurate

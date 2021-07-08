@@ -199,7 +199,7 @@ namespace SunriseCalculator
             switch (horizon)
             {
                 case Horizon.Normal:
-                    return NominalHorizon - SolarPosition.ApparentRadius;
+                    return NominalHorizon - SolarPosition.ApparentRadiusDegrees;
 
                 case Horizon.Nominal:
                     return NominalHorizon;
