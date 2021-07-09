@@ -48,14 +48,16 @@ namespace SunriseCalculator
         /// and optionally, day (default is today).
         /// </summary>
         /// <param name="latitude">The latitude, between -90.0 (the south pole, 
-        /// <see cref="MinLatitude"/>) and 90.0 (the north pole, <see cref="MaxLatitude"/>).</param>
+        /// <see cref="MinLatitude"/>) and 90.0 (the north pole, <see cref="MaxLatitude"/>). Values
+        /// outside this range will raise an exception.</param>
         /// <param name="longitude">The longitude, between -180.0 (the eastern side of the 
         /// international dateline, <see cref="MinLongitude"/>) and and 180.0 (the western side of 
-        /// the international dateline, <see cref="MaxLongitude"/>).</param>
+        /// the international dateline, <see cref="MaxLongitude"/>). Values outside this range 
+        /// will be wrapped around.</param>
         /// <param name="day">Optionally specify any day for calculation, default is today. Results
         /// should be accurate for dates between 1801 and 2099.</param>
         /// <exception cref="ArgumentOutOfRangeException"><see cref="Latitude"/> must be in range <see cref="MinLatitude"/> (-90°) to <see cref="MaxLatitude"/> (90°).</exception>
-        /// <exception cref="ArgumentOutOfRangeException"><see cref="Longitude"/> must be in range <see cref="MinLongitude"/> (-180°) to <see cref="MaxLongitude"/> (180°).</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><see cref="Longitude"/> must be finite.</exception>
         public SunriseCalc(double latitude, double longitude, DateTime day = default)
         {
             Latitude = latitude;
@@ -110,15 +112,23 @@ namespace SunriseCalculator
 
         /// <summary>
         /// The longitude of the geolocation to use for calculation, in degrees. East is positive,
-        /// west is negative. Must be within <see cref="MinLongitude"/> (-180°) and <see cref="MaxLongitude"/> (180°).
+        /// west is negative. Values outside of <see cref="MinLongitude"/> (-180°) and 
+        /// <see cref="MaxLongitude"/> (180°) will be wrapped around.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException"><see cref="Longitude"/> must be in range <see cref="MinLongitude"/> (-180°) to <see cref="MaxLongitude"/> (180°).</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><see cref="Longitude"/> must be finite.</exception>
         public double Longitude
         {
             get => longitude; set
             {
-                if (double.IsNaN(value) || (value < MinLongitude) || (value > MaxLongitude))
-                    throw new ArgumentOutOfRangeException(nameof(value), value, $"{nameof(Longitude)} must be in range {MinLongitude}° to {MaxLongitude}°.");
+                if (double.IsNaN(value) || double.IsInfinity(value))
+                    throw new ArgumentOutOfRangeException(nameof(value), value, $"{nameof(Longitude)} must be finite.");
+
+                // Since Windows.Devices.Geolocation.BasicGeoposition can return longitudes outside -180..180, we'll constrain.
+                const double revolution = 360.0;
+                while (value < MinLongitude)
+                    value += revolution;
+                while (value > MaxLongitude)
+                    value -= revolution;
 
                 longitude = value;
                 if (time != default)
