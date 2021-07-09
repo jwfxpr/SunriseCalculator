@@ -14,10 +14,10 @@ Unit testing is done through the MSTest framework. The [`SunriseCalculatorTests`
 #using SunriseCalculator.Enums;
 
 // Create an instance of the sunrise calculator for the desired location for today.
-SunriseCalculator newYorkCityToday = new SunriseCalculator(latitude: 40.7128, longitude: -74.0060);
+SunriseCalc newYorkCityToday = new SunriseCalc(latitude: 40.7128, longitude: -74.0060);
 
 // Create an instance of the sunrise calculator for the desired location for tomorrow.
-SunriseCalculator newYorkCityTomorrow = new SunriseCalculator(40.7128, -74.0060, DateTime.Today + TimeSpan.FromDays(1));
+SunriseCalc newYorkCityTomorrow = new SunriseCalc(40.7128, -74.0060, DateTime.Today + TimeSpan.FromDays(1));
 
 // Get today's sunrise and sunset times for New York City.
 newYorkCityToday.GetRiseAndSet(out DateTime todaysSunset, out DateTime todaysSunrise);
@@ -29,7 +29,7 @@ newYorkCityTomorrow.GetSunrise(out DateTime tomorrowsCivilSunrise, Horizon.Civil
 TimeSpan tomorrowsCivilDayLength = newYorkCityTomorrow.GetDayLength(Horizon.Civil);
 
 // Let's find out if the Sun will set or rise today in Inuvik, Canada, which is above the arctic circle.
-SunriseCalculator inuvikToday = new SunriseCalculator(68.3607, -133.7230);
+SunriseCalc inuvikToday = new SunriseCalc(68.3607, -133.7230);
 DiurnalResult inuvikDayType = inuvikToday.GetSunrise(out DateTime inuvikSunset);
 switch (inuvikDayType)
 {

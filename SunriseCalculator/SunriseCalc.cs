@@ -44,11 +44,18 @@ namespace SunriseCalculator
         public const double MinLongitude = -180.0;
 
         /// <summary>
-        /// Creates a new instance of the sunrise calculator for a specified latitude, longitude, and
+        /// Creates a new instance of the sunrise calculator for a specified latitude, longitude, 
+        /// and optionally, day (default is today).
         /// </summary>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        /// <param name="day"></param>
+        /// <param name="latitude">The latitude, between -90.0 (the south pole, 
+        /// <see cref="MinLatitude"/>) and 90.0 (the north pole, <see cref="MaxLatitude"/>).</param>
+        /// <param name="longitude">The longitude, between -180.0 (the eastern side of the 
+        /// international dateline, <see cref="MinLongitude"/>) and and 180.0 (the western side of 
+        /// the international dateline, <see cref="MaxLongitude"/>).</param>
+        /// <param name="day">Optionally specify any day for calculation, default is today. Results
+        /// should be accurate for dates between 1801 and 2099.</param>
+        /// <exception cref="ArgumentOutOfRangeException"><see cref="Latitude"/> must be in range <see cref="MinLatitude"/> (-90°) to <see cref="MaxLatitude"/> (90°).</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><see cref="Longitude"/> must be in range <see cref="MinLongitude"/> (-180°) to <see cref="MaxLongitude"/> (180°).</exception>
         public SunriseCalc(double latitude, double longitude, DateTime day = default)
         {
             Latitude = latitude;
