@@ -1,0 +1,3 @@
+[submodule "SunriseCalculatorTests"]
+	path = SunriseCalculatorTests
+	url = https://github.com/jwfxpr/SunriseCalculatorTests.git
