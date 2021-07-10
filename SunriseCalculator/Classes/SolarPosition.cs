@@ -5,6 +5,10 @@ using System;
 
 namespace SunriseCalculator.Classes
 {
+    /// <summary>
+    /// Performs calculations for the position of the sun in the sky from arbitrary positions on 
+    /// Earth on a given day. Results are accurate for dates from 1801 to 2099.
+    /// </summary>
     public class SolarPosition
     {
         /// <summary> Radians to degrees conversion factor. </summary>
@@ -31,7 +35,7 @@ namespace SunriseCalculator.Classes
         /// to 2099 will be yield the most accurate results.</param>
         /// <param name="longitude">The local longitude for which to calculate values. If accuracy 
         /// is not important, this can be zero.</param>
-        /// <exception cref="ArgumentOutOfRangeException"><see cref="longitude"/> must be in range -180.0 to 180.0.</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><c>longitude</c> must be in range -180.0 to 180.0.</exception>
         public SolarPosition(DateTime day, double longitude)
         {
             if (double.IsNaN(longitude) || longitude < -180 || longitude > 180)
@@ -168,6 +172,7 @@ namespace SunriseCalculator.Classes
         /// </summary>
         private static double Hypotenuse(double x, double y) => Math.Sqrt(Square(x) + Square(y));
 
+        /// <summary>
         /// Given a value in radians, returns that value constrained to between 0 and 2*Pi.
         /// </summary>
         /// <param name="value">Any value in radians.</param>

@@ -7,6 +7,10 @@ using System;
 
 namespace SunriseCalculator
 {
+    /// <summary>
+    /// Performs calculations for dawn and dusk times and related results for any position on 
+    /// Earth, for any day from 1801 to 2099.
+    /// </summary>
     public partial class SunriseCalc
     {
         /// <summary> Degrees to radians conversion factor. </summary>
@@ -191,7 +195,7 @@ namespace SunriseCalculator
         /// Greenwhich meridian at 0h UT) in radians.  GMST is then the sidereal time at Greenwich at any time
         /// of the day.
         /// </summary>
-        /// <param name="epochDay">The days since the beginning of the <see cref="J2000"/> epoch.</param>
+        /// <param name="epochDay">The days since the beginning of the J2000 epoch.</param>
         /// <remarks>For a full explanation of this value, refer to the original comments in Paul
         /// Schlyter's code, details in the <c>README.md</c> file.</remarks>
         private double GMST0Radians(double epochDay)
@@ -280,6 +284,7 @@ namespace SunriseCalculator
         /// indicating whether the sun rises or not.
         /// </summary>
         /// <param name="sunrise">The calculated sunrise (in UTC) for the specified day.</param>
+        /// <param name="timeZone">Optionally, convert the times to the provided time zone. In not specified, times are in UTC.</param>
         /// <param name="horizon">The horizon to use for the sunrise calculation.</param>
         /// <returns>A value indicating whether the sun rises (crosses the horizon) on the specified day.</returns>
         public DiurnalResult GetSunrise(out DateTime sunrise, TimeZoneInfo timeZone = null, Horizon horizon = Horizon.Normal)
@@ -300,6 +305,7 @@ namespace SunriseCalculator
         /// indicating whether the sun sets or not.
         /// </summary>
         /// <param name="sunset">The calculated sunset for the specified day.</param>
+        /// <param name="timeZone">Optionally, convert the times to the provided time zone. In not specified, times are in UTC.</param>
         /// <param name="horizon">The horizon to use for the sunset calculation.</param>
         /// <returns>A value indicating whether the sun sets (crosses the horizon) on the specified day.</returns>
         public DiurnalResult GetSunset(out DateTime sunset, TimeZoneInfo timeZone = null, Horizon horizon = Horizon.Normal)

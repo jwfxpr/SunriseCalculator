@@ -1,0 +1,474 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SunriseCalculator</name>
+    </assembly>
+    <members>
+        <member name="T:SunriseCalculator.Classes.EpochHelper">
+            <summary>
+            A small helper class with functions useful for calculations in the J2000 era.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.Classes.EpochHelper.MaxYear">
+            <summary>
+            The maximum year for which calculations are accurate.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.Classes.EpochHelper.MinYear">
+            <summary>
+            The minimum year for which calculations are accurate.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.Classes.EpochHelper.J2000">
+            <summary>
+            The start of the current astronomical epoch, at 00:00:00 on January 1, 2000.
+            </summary>
+        </member>
+        <member name="M:SunriseCalculator.Classes.EpochHelper.DaysSinceJ2000(System.DateTime)">
+            <summary>
+            Returns the epoch day, or the days between the provided <see cref="T:System.DateTime"/> and <see cref="F:SunriseCalculator.Classes.EpochHelper.J2000"/>,
+            the start of the current astronomical epoch.
+            </summary>
+            <param name="dateTime">The moment for which to calculate the epoch day.</param>
+            <returns>The epoch day for the specified time.</returns>
+        </member>
+        <member name="M:SunriseCalculator.Classes.EpochHelper.EpochDayLocalMidday(System.DateTime,System.Double)">
+            <summary>
+            Returns the epoch day of local midday at the time and longitude specified.
+            </summary>
+            <param name="dateTime">A date for which to calculate the local midday. Hours, minutes, and seconds of this value are ignored.</param>
+            <param name="longitude">The longitude at which local midday will be calculated.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SunriseCalculator.Classes.EpochHelper.EpochDayToDateTime(System.Double)">
+            <summary>
+            Converts an epoch day to a <see cref="T:System.DateTime"/> value.
+            </summary>
+            <param name="epochDays">The epoch day. See <see cref="M:SunriseCalculator.Classes.EpochHelper.DaysSinceJ2000(System.DateTime)"/> for more information.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SunriseCalculator.Classes.EpochHelper.LocalMidday(System.DateTime,System.Double)">
+            <summary>
+            Returns the local midday in UTC at the longitude specified.
+            </summary>
+            <param name="dateTime">A date for which to calculate the local midday. Hours, minutes, and seconds of this value are ignored.</param>
+            <param name="longitude">The longitude at which local midday will be calculated.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SunriseCalculator.Classes.EpochHelper.UTCMidday(System.DateTime)">
+            <summary>
+            Returns the <see cref="T:System.DateTime"/> of midday for the provided day. The returned time
+            represents midday in UTC, ignoring longitude.
+            </summary>
+            <param name="day">A date for which to calculate midday. Hours, minutes and seconds are ignored.</param>
+            <returns>UTC midday on the provided day.</returns>
+        </member>
+        <member name="M:SunriseCalculator.Classes.EpochHelper.UTCMidday(System.Double)">
+            <summary>
+            Returns the epoch day of midday for the provided day. The returned time
+            represents midday in UTC, ignoring longitude.
+            </summary>
+            <param name="epochDay">A date for which to calculate midday. Hours, minutes and seconds are ignored.</param>
+            <returns>UTC midday on the provided day.</returns>
+        </member>
+        <member name="T:SunriseCalculator.Classes.SolarPosition">
+            <summary>
+            Performs calculations for the position of the sun in the sky from arbitrary positions on 
+            Earth on a given day. Results are accurate for dates from 1801 to 2099.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.Classes.SolarPosition.RadDeg">
+            <summary> Radians to degrees conversion factor. </summary>
+        </member>
+        <member name="F:SunriseCalculator.Classes.SolarPosition.DegRad">
+            <summary> Degrees to radians conversion factor. </summary>
+        </member>
+        <member name="F:SunriseCalculator.Classes.SolarPosition.LocalMeanSolarTimeEpoch">
+            <summary>
+            This value represents the days between January 1, 2000 at 00:00:00 (the start of the 
+            current astronomical epoch) and local midday at the specified <see cref="F:SunriseCalculator.Classes.SolarPosition.Longitude"/>
+            and <see cref="F:SunriseCalculator.Classes.SolarPosition.Date"/>.
+            </summary>
+        </member>
+        <member name="M:SunriseCalculator.Classes.SolarPosition.#ctor(System.DateTime,System.Double)">
+            <summary>
+            Creates an instance for the specified day at the specified longitude. Calculations 
+            should be accurate for days from 1801 to 2099. Dates outside this range will be 
+            accepted, but accuracy will be reduced.
+            </summary>
+            <param name="day">The day for which to calculate solar position values. Dates from 1801
+            to 2099 will be yield the most accurate results.</param>
+            <param name="longitude">The local longitude for which to calculate values. If accuracy 
+            is not important, this can be zero.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><c>longitude</c> must be in range -180.0 to 180.0.</exception>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.MeanAnomaly">
+            <summary>
+            Mean anomaly of the sun, in radians.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.MeanLongitudeOfPerihelion">
+            <summary>
+            Mean longitude of perihelion, in radians.
+            </summary>
+            <remarks>The Suns' mean longitude = <see cref="P:SunriseCalculator.Classes.SolarPosition.MeanAnomaly"/> + <see cref="P:SunriseCalculator.Classes.SolarPosition.MeanLongitudeOfPerihelion"/>.</remarks>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.EarthOrbitEccentricity">
+            <summary>
+            Eccentricity of Earth's orbit. This value is unitless.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.EccentricAnomaly">
+            <summary>
+            Eccentric anomaly, the angle between the direction of periapsis and the current 
+            position of the Earth on its orbit, in radians.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.OrbitXCoordinate">
+            <summary>
+            X coordinate in orbit, in AU.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.OrbitYCoordinate">
+            <summary>
+            Y coordinate in orbit, in AU.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.DistanceToSun">
+            <summary>
+            Distance to the sun, in AU.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.TrueAnomaly">
+            <summary>
+            The sun's true anomaly, in radians.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.TrueSolarLongitude">
+            <summary>
+            The true solar longitude, in radians.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.ObliquityOfEcliptic">
+            <summary>
+            The obliquity of the ecliptic, or the inclination of Earth's axis, in radians.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.EclipticRectangularXCoordinate">
+            <summary>
+            The ecliptic rectangular x coordinate of the sun's position in the sky.
+            This is the same as the <see cref="P:SunriseCalculator.Classes.SolarPosition.EquatorialXCoordinate"/>.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.EclipticRectangularYCoordinate">
+            <summary>
+            The ecliptic rectangular y coordinate of the sun's position in the sky.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.EquatorialXCoordinate">
+            <summary>
+            The equatorial rectangular x coordinate of the sun's position in the sky.
+            This is the same as the <see cref="P:SunriseCalculator.Classes.SolarPosition.EclipticRectangularXCoordinate"/>.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.EquatorialZCoordinate">
+            <summary>
+            The equatorial rectangular z coordinate of the sun's position in the sky.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.EquatorialYCoordinate">
+            <summary>
+            The equatorial rectangular y coordinate of the sun's position in the sky.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.ApparentRadiusDegrees">
+            <summary>
+            The sun's apparent radius from Earth on the given day, in degrees.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.ApparentRadiusRadians">
+            <summary>
+            The sun's apparent radius from Earth on the given day, in radians.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.Classes.SolarPosition.Date">
+            <summary>
+            Gets the date for which this instance is calculated. Calculations should be accurate
+            for dates between 1801 and 2099.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.Classes.SolarPosition.Longitude">
+            <summary>
+            Gets the longitude (on the surface of Earth) for which this instance is calculated. If 
+            accuracy is not important, this can be zero.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.RightAscensionRadians">
+            <summary>
+            The sun's right ascension, in radians.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.RightAscensionDegrees">
+            <summary>
+            The sun's right ascension, in degrees.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.DeclinationRadians">
+            <summary>
+            The sun's declination, in radians.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.Classes.SolarPosition.DeclinationDegrees">
+            <summary>
+            The sun's declination, in degrees.
+            </summary>
+        </member>
+        <member name="M:SunriseCalculator.Classes.SolarPosition.Hypotenuse(System.Double,System.Double)">
+            <summary>
+            Returns the square root of the sum of the squares of the parameters.
+            </summary>
+        </member>
+        <member name="M:SunriseCalculator.Classes.SolarPosition.Rev2Pi(System.Double)">
+            <summary>
+            Given a value in radians, returns that value constrained to between 0 and 2*Pi.
+            </summary>
+            <param name="value">Any value in radians.</param>
+            <returns>The value constrained to the 0 to 2*Pi radians range.</returns>
+        </member>
+        <member name="M:SunriseCalculator.Classes.SolarPosition.Square(System.Double)">
+            <summary>
+            Returns the square of the value.
+            </summary>
+        </member>
+        <member name="T:SunriseCalculator.Enums.DiurnalResult">
+            <summary>
+            Enumerates the possible cases for the results of diurnal arc calculations. This return 
+            value indicates whether or not the sun passes the calculated horizon line on the given day.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.Enums.DiurnalResult.NormalDay">
+            <summary>
+            The diurnal arc is normal; the sun crosses the specified altitude on the specified day.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.Enums.DiurnalResult.SunAlwaysAbove">
+            <summary>
+            The sun remains above the specified altitude for all 24h of the specified day. The time
+            returned is when the sun is closest to the horizon (directly to the south in the
+            northern hemisphere; to the north in the southern); sunrise is 12 hours before
+            midday, and sunset is 12 hours after.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.Enums.DiurnalResult.SunAlwaysBelow">
+            <summary>
+            The sun remains below the specified altitude for all 24h of the specified day. Sunrise
+            and sunset are both calculated as when the sun is closest to the horizon (directly to
+            the south in the northern hemisphere; to the north in the southern).
+            </summary>
+        </member>
+        <member name="T:SunriseCalculator.Enums.Horizon">
+            <summary>
+            Enumerates the possible horizon types for dawn and dusk calculations.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.Enums.Horizon.Normal">
+            <summary>
+            Normally, sunrise/set is considered to occur when the sun's upper limb is 35 arc
+            minutes below the horizon (this accounts for the refraction of the Earth's atmosphere).
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.Enums.Horizon.Civil">
+            <summary>
+            Civil dawn or dusk marks the start or end of the brightest of the standard
+            twilights, followed by <see cref="F:SunriseCalculator.Enums.Horizon.Nautical"/> and <see cref="F:SunriseCalculator.Enums.Horizon.Astronomical"/> twilights.
+            It occurs when the center of the sun passes 6° below the horizon.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.Enums.Horizon.Nautical">
+            <summary>
+            Nautical dawn or dusk marks the start or end of the intermediate brightness of
+            twilight, between <see cref="F:SunriseCalculator.Enums.Horizon.Civil"/> and <see cref="F:SunriseCalculator.Enums.Horizon.Astronomical"/> twilights.
+            It occurs when the center of the sun passes 12° below the horizon.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.Enums.Horizon.Astronomical">
+            <summary>
+            Astronomical dawn or dusk marks the start or end of the dimmest of the standard
+            twilights, followed by <see cref="F:SunriseCalculator.Enums.Horizon.Nautical"/> and <see cref="F:SunriseCalculator.Enums.Horizon.Civil"/> twilights.
+            It occurs when the center of the sun passes 18° below the horizon.
+            </summary>
+        </member>
+        <member name="T:SunriseCalculator.SunriseCalc">
+            <summary>
+            Performs calculations for dawn and dusk times and related results for any position on 
+            Earth, for any day from 1801 to 2099.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.SunriseCalc.DegRad">
+            <summary> Degrees to radians conversion factor. </summary>
+        </member>
+        <member name="F:SunriseCalculator.SunriseCalc.MaxLatitude">
+            <summary>
+            The maximum possible Latitude value. Latitudes above this do not exist.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.SunriseCalc.MaxLongitude">
+            <summary>
+            The maximum possible Longitude value. Longitudes above this wrap around to negative values.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.SunriseCalc.MinLatitude">
+            <summary>
+            The minimum possible Latitude value. Latitudes below this do not exist.
+            </summary>
+        </member>
+        <member name="F:SunriseCalculator.SunriseCalc.MinLongitude">
+            <summary>
+            The mininum possible Longitude value. Longitudes below this wrap around to positive values.
+            </summary>
+        </member>
+        <member name="M:SunriseCalculator.SunriseCalc.#ctor(System.Double,System.Double,System.DateTime)">
+            <summary>
+            Creates a new instance of the sunrise calculator for a specified latitude, longitude,
+            and optionally, day (default is today).
+            </summary>
+            <param name="latitude">The latitude, between -90.0 (the south pole,
+            <see cref="F:SunriseCalculator.SunriseCalc.MinLatitude"/>) and 90.0 (the north pole, <see cref="F:SunriseCalculator.SunriseCalc.MaxLatitude"/>). Values
+            outside this range will raise an exception.</param>
+            <param name="longitude">The longitude, between -180.0 (the eastern side of the
+            international dateline, <see cref="F:SunriseCalculator.SunriseCalc.MinLongitude"/>) and and 180.0 (the western side of
+            the international dateline, <see cref="F:SunriseCalculator.SunriseCalc.MaxLongitude"/>). Values outside this range
+            will be wrapped around.</param>
+            <param name="day">Optionally specify any day for calculation, default is today. Results
+            should be accurate for dates between 1801 and 2099.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><see cref="P:SunriseCalculator.SunriseCalc.Latitude"/> must be in range <see cref="F:SunriseCalculator.SunriseCalc.MinLatitude"/> (-90°) to <see cref="F:SunriseCalculator.SunriseCalc.MaxLatitude"/> (90°).</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><see cref="P:SunriseCalculator.SunriseCalc.Longitude"/> must be finite.</exception>
+        </member>
+        <member name="P:SunriseCalculator.SunriseCalc.LocalSiderealTimeRadians">
+            <summary>
+            The local sidereal time at the <see cref="P:SunriseCalculator.SunriseCalc.Longitude"/>, in radians.
+            </summary>
+            <returns>The local sidereal time in radians, modulo 360.</returns>
+        </member>
+        <member name="P:SunriseCalculator.SunriseCalc.TimeSunAtLongitude">
+            <summary>
+            The time (in UTC) at which the sun will be immediately above the <see cref="P:SunriseCalculator.SunriseCalc.Longitude"/>
+            (directly to the south in the northern hemisphere; to the north in the southern).
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.SunriseCalc.Day">
+            <summary>
+            Sets and gets the day for which calculations are made. By default, the current date is used.
+            </summary>
+        </member>
+        <member name="P:SunriseCalculator.SunriseCalc.Latitude">
+            <summary>
+            The latitude of the geolocation to use for calculation, in degrees. North is positive,
+            south is negative. Must be within <see cref="F:SunriseCalculator.SunriseCalc.MinLatitude"/> (-90°) and <see cref="F:SunriseCalculator.SunriseCalc.MaxLatitude"/> (90°).
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException"><see cref="P:SunriseCalculator.SunriseCalc.Latitude"/> must be in range <see cref="F:SunriseCalculator.SunriseCalc.MinLatitude"/> (-90°) to <see cref="F:SunriseCalculator.SunriseCalc.MaxLatitude"/> (90°).</exception>
+        </member>
+        <member name="P:SunriseCalculator.SunriseCalc.Longitude">
+            <summary>
+            The longitude of the geolocation to use for calculation, in degrees. East is positive,
+            west is negative. Values outside of <see cref="F:SunriseCalculator.SunriseCalc.MinLongitude"/> (-180°) and
+            <see cref="F:SunriseCalculator.SunriseCalc.MaxLongitude"/> (180°) will be wrapped around.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException"><see cref="P:SunriseCalculator.SunriseCalc.Longitude"/> must be finite.</exception>
+        </member>
+        <member name="P:SunriseCalculator.SunriseCalc.SolarPosition">
+            <summary>
+            This object holds values for the position of the sun on the day of <see cref="P:SunriseCalculator.SunriseCalc.Day"/>.
+            </summary>
+        </member>
+        <member name="M:SunriseCalculator.SunriseCalc.Rev1Pi(System.Double)">
+            <summary>
+            Given a value in radians, returns that value constrained to between -Pi and Pi radians.
+            </summary>
+            <param name="value">Any value in radians.</param>
+            <returns>The value constrained to the -Pi and Pi radians range.</returns>
+        </member>
+        <member name="M:SunriseCalculator.SunriseCalc.Rev2Pi(System.Double)">
+            <summary>
+            Given a value in radians, returns that value constrained to between 0 and 2 Pi radians.
+            </summary>
+            <param name="value">Any value in radians.</param>
+            <returns>The value constrained to the 0 to 360 degree range.</returns>
+        </member>
+        <member name="M:SunriseCalculator.SunriseCalc.ArcRadiansToTimeSpan(System.Double)">
+            <summary>
+            Given a diurnal arc in radians, returns the corresponding time of day on the day of <see cref="P:SunriseCalculator.SunriseCalc.Day"/>.
+            </summary>
+            <param name="radiansOfArc">An arc value in radians.</param>
+            <returns>The corresponding time on the specified day.</returns>
+        </member>
+        <member name="M:SunriseCalculator.SunriseCalc.DiurnalArcRadians(System.Double,System.Double@)">
+            <summary>
+            Computes the diurnal arc that the sun traverses to reach the specified altitude.
+            Use <see cref="M:SunriseCalculator.SunriseCalc.RadiansToHours(System.Double)"/> to convert result to hours.
+            </summary>
+            <param name="altitude">The altitude threshold, in degrees. This is the 'horizon' for the calculation.</param>
+            <param name="arcRadians">The diurnal arc, in radians.</param>
+            <returns>A value indicating whether the sun rises (crosses the horizon) on the specified day.</returns>
+        </member>
+        <member name="M:SunriseCalculator.SunriseCalc.GMST0Radians(System.Double)">
+            <summary>
+            Returns the Greenwich Mean Sidereal Time at 0h UT (i.e. the sidereal time at the
+            Greenwhich meridian at 0h UT) in radians.  GMST is then the sidereal time at Greenwich at any time
+            of the day.
+            </summary>
+            <param name="epochDay">The days since the beginning of the J2000 epoch.</param>
+            <remarks>For a full explanation of this value, refer to the original comments in Paul
+            Schlyter's code, details in the <c>README.md</c> file.</remarks>
+        </member>
+        <member name="M:SunriseCalculator.SunriseCalc.HorizonDegrees(SunriseCalculator.Enums.Horizon)">
+            <summary>
+            Selects the correct horizon value in degrees.
+            </summary>
+        </member>
+        <member name="M:SunriseCalculator.SunriseCalc.RadiansToHours(System.Double)">
+            <summary>
+            Converts a right ascension or arc value in radians to a value in hours.
+            </summary>
+        </member>
+        <member name="M:SunriseCalculator.SunriseCalc.GetDayLength(SunriseCalculator.Enums.Horizon)">
+            <summary>
+            Returns a <see cref="T:System.TimeSpan"/> of the time the sun spends above the specified <see cref="T:SunriseCalculator.Enums.Horizon"/>
+            on the day of <see cref="P:SunriseCalculator.SunriseCalc.Day"/>.
+            </summary>
+            <param name="horizon">The <see cref="T:SunriseCalculator.Enums.Horizon"/> to use for day length calculation.</param>
+            <returns>A <see cref="T:System.TimeSpan"/> for the specified day length.</returns>
+        </member>
+        <member name="M:SunriseCalculator.SunriseCalc.GetRiseAndSet(System.DateTime@,System.DateTime@,System.TimeZoneInfo,SunriseCalculator.Enums.Horizon)">
+            <summary>
+            Returns sunrise and sunset in UTC on the day specified in <see cref="P:SunriseCalculator.SunriseCalc.Day"/>, and a
+            <see cref="T:SunriseCalculator.Enums.DiurnalResult"/> indicating whether the sun rises or not.
+            </summary>
+            <param name="sunrise">The calculated sunrise (in UTC) for the specified day.</param>
+            <param name="sunset">The calculated sunset for the specified day.</param>
+            <param name="timeZone">Optionally, convert the times to the provided time zone. In not specified, times are in UTC.</param>
+            <param name="horizon">The horizon to use for the sunrise calculation.</param>
+            <returns>A value indicating whether the sun rises (crosses the horizon) on the specified day.</returns>
+        </member>
+        <member name="M:SunriseCalculator.SunriseCalc.GetSunrise(System.DateTime@,System.TimeZoneInfo,SunriseCalculator.Enums.Horizon)">
+            <summary>
+            Returns sunrise in UTC on the day specified in <see cref="P:SunriseCalculator.SunriseCalc.Day"/>, and a <see cref="T:SunriseCalculator.Enums.DiurnalResult"/>
+            indicating whether the sun rises or not.
+            </summary>
+            <param name="sunrise">The calculated sunrise (in UTC) for the specified day.</param>
+            <param name="timeZone">Optionally, convert the times to the provided time zone. In not specified, times are in UTC.</param>
+            <param name="horizon">The horizon to use for the sunrise calculation.</param>
+            <returns>A value indicating whether the sun rises (crosses the horizon) on the specified day.</returns>
+        </member>
+        <member name="M:SunriseCalculator.SunriseCalc.GetSunset(System.DateTime@,System.TimeZoneInfo,SunriseCalculator.Enums.Horizon)">
+            <summary>
+            Returns sunset in UTC on the day specified in <see cref="P:SunriseCalculator.SunriseCalc.Day"/>, and a <see cref="T:SunriseCalculator.Enums.DiurnalResult"/>
+            indicating whether the sun sets or not.
+            </summary>
+            <param name="sunset">The calculated sunset for the specified day.</param>
+            <param name="timeZone">Optionally, convert the times to the provided time zone. In not specified, times are in UTC.</param>
+            <param name="horizon">The horizon to use for the sunset calculation.</param>
+            <returns>A value indicating whether the sun sets (crosses the horizon) on the specified day.</returns>
+        </member>
+    </members>
+</doc>

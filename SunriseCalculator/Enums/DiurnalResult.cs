@@ -3,6 +3,10 @@
 
 namespace SunriseCalculator.Enums
 {
+    /// <summary>
+    /// Enumerates the possible cases for the results of diurnal arc calculations. This return 
+    /// value indicates whether or not the sun passes the calculated horizon line on the given day.
+    /// </summary>
     public enum DiurnalResult
     {
         /// <summary>

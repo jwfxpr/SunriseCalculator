@@ -3,6 +3,9 @@
 
 namespace SunriseCalculator.Enums
 {
+    /// <summary>
+    /// Enumerates the possible horizon types for dawn and dusk calculations.
+    /// </summary>
     public enum Horizon
     {
         /// <summary>

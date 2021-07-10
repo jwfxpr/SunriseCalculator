@@ -5,6 +5,9 @@ using System;
 
 namespace SunriseCalculator.Classes
 {
+    /// <summary>
+    /// A small helper class with functions useful for calculations in the J2000 era.
+    /// </summary>
     public static class EpochHelper
     {
         private const double MaxLongitude = 180;
@@ -67,7 +70,7 @@ namespace SunriseCalculator.Classes
         /// Returns the epoch day of midday for the provided day. The returned time
         /// represents midday in UTC, ignoring longitude.
         /// </summary>
-        /// <param name="day">A date for which to calculate midday. Hours, minutes and seconds are ignored.</param>
+        /// <param name="epochDay">A date for which to calculate midday. Hours, minutes and seconds are ignored.</param>
         /// <returns>UTC midday on the provided day.</returns>
         public static double UTCMidday(double epochDay) => Math.Floor(epochDay) + 0.5;
     }
