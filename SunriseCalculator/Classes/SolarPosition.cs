@@ -13,6 +13,8 @@ namespace SunriseCalculator.Classes
         /// <summary> Degrees to radians conversion factor. </summary>
         private const double DegRad = Math.PI / 180.0;
 
+        private const double SolarRadiusAt1AUDegrees = 0.2666;
+
         /// <summary>
         /// This value represents the days between January 1, 2000 at 00:00:00 (the start of the 
         /// current astronomical epoch) and local midday at the specified <see cref="Longitude"/>
@@ -43,13 +45,13 @@ namespace SunriseCalculator.Classes
         /// <summary>
         /// Mean anomaly of the sun, in radians.
         /// </summary>
-        private double MeanAnomaly => Rev360(356.0470 + 0.9856002585 * LocalMeanSolarTimeEpoch) * DegRad;
+        private double MeanAnomaly => Rev2Pi(356.0470 * DegRad + (0.9856002585 * DegRad) * LocalMeanSolarTimeEpoch);
         
         /// <summary>
         /// Mean longitude of perihelion, in radians.
         /// </summary>
         /// <remarks>The Suns' mean longitude = <see cref="MeanAnomaly"/> + <see cref="MeanLongitudeOfPerihelion"/>.</remarks>
-        private double MeanLongitudeOfPerihelion => (282.9404 + 4.70935E-5 * LocalMeanSolarTimeEpoch) * DegRad;
+        private double MeanLongitudeOfPerihelion => (282.9404 * DegRad + (4.70935E-5 * DegRad) * LocalMeanSolarTimeEpoch);
 
         /// <summary>
         /// Eccentricity of Earth's orbit. This value is unitless.
@@ -73,12 +75,12 @@ namespace SunriseCalculator.Classes
         private double OrbitYCoordinate => Math.Sqrt(1.0 - Square(EarthOrbitEccentricity)) * Math.Sin(EccentricAnomaly);
 
         /// <summary>
-        /// Distance to the Sun, in AU.
+        /// Distance to the sun, in AU.
         /// </summary>
         public double DistanceToSun => Hypotenuse(OrbitXCoordinate, OrbitYCoordinate);
 
         /// <summary>
-        /// The Sun's true anomaly, in radians.
+        /// The sun's true anomaly, in radians.
         /// </summary>
         private double TrueAnomaly => Math.Atan2(OrbitYCoordinate, OrbitXCoordinate);
 
@@ -90,44 +92,44 @@ namespace SunriseCalculator.Classes
         /// <summary>
         /// The obliquity of the ecliptic, or the inclination of Earth's axis, in radians.
         /// </summary>
-        public double ObliquityOfEcliptic => (23.4393 - 3.563E-7 * LocalMeanSolarTimeEpoch) * DegRad;
+        public double ObliquityOfEcliptic => (23.4393 * DegRad - (3.563E-7 * DegRad) * LocalMeanSolarTimeEpoch);
 
         /// <summary>
-        /// The ecliptic rectangular x coordinate of the Sun's position in the sky.
+        /// The ecliptic rectangular x coordinate of the sun's position in the sky.
         /// This is the same as the <see cref="EquatorialXCoordinate"/>.
         /// </summary>
         private double EclipticRectangularXCoordinate => DistanceToSun * Math.Cos(TrueSolarLongitude);
 
         /// <summary>
-        /// The ecliptic rectangular y coordinate of the Sun's position in the sky.
+        /// The ecliptic rectangular y coordinate of the sun's position in the sky.
         /// </summary>
         private double EclipticRectangularYCoordinate => DistanceToSun * Math.Sin(TrueSolarLongitude);
 
         /// <summary>
-        /// The equatorial rectangular x coordinate of the Sun's position in the sky.
+        /// The equatorial rectangular x coordinate of the sun's position in the sky.
         /// This is the same as the <see cref="EclipticRectangularXCoordinate"/>.
         /// </summary>
         private double EquatorialXCoordinate => EclipticRectangularXCoordinate;
 
         /// <summary>
-        /// The equatorial rectangular z coordinate of the Sun's position in the sky.
+        /// The equatorial rectangular z coordinate of the sun's position in the sky.
         /// </summary>
         private double EquatorialZCoordinate => EclipticRectangularYCoordinate * Math.Sin(ObliquityOfEcliptic);
 
         /// <summary>
-        /// The equatorial rectangular y coordinate of the Sun's position in the sky.
+        /// The equatorial rectangular y coordinate of the sun's position in the sky.
         /// </summary>
         private double EquatorialYCoordinate => EclipticRectangularYCoordinate * Math.Cos(ObliquityOfEcliptic);
 
         /// <summary>
-        /// The Sun's apparent radius from Earth on the given day, in degrees.
+        /// The sun's apparent radius from Earth on the given day, in degrees.
         /// </summary>
-        public double ApparentRadiusDegrees => 0.2666 / DistanceToSun;
+        public double ApparentRadiusDegrees => SolarRadiusAt1AUDegrees / DistanceToSun;
 
         /// <summary>
-        /// The Sun's apparent radius from Earth on the given day, in radians.
+        /// The sun's apparent radius from Earth on the given day, in radians.
         /// </summary>
-        public double ApparentRadiusRadians => ApparentRadiusDegrees * DegRad;
+        public double ApparentRadiusRadians => (SolarRadiusAt1AUDegrees * DegRad) / DistanceToSun;
 
         /// <summary>
         /// Gets the date for which this instance is calculated. Calculations should be accurate
@@ -142,22 +144,22 @@ namespace SunriseCalculator.Classes
         public readonly double Longitude;
 
         /// <summary>
-        /// The Sun's right ascension, in radians.
+        /// The sun's right ascension, in radians.
         /// </summary>
         public double RightAscensionRadians => Math.Atan2(EquatorialYCoordinate, EquatorialXCoordinate);
 
         /// <summary>
-        /// The Sun's right ascension, in degrees.
+        /// The sun's right ascension, in degrees.
         /// </summary>
         public double RightAscensionDegrees => RightAscensionRadians * RadDeg;
 
         /// <summary>
-        /// The Sun's declination, in radians.
+        /// The sun's declination, in radians.
         /// </summary>
         public double DeclinationRadians => Math.Atan2(EquatorialZCoordinate, Hypotenuse(EquatorialXCoordinate, EquatorialYCoordinate));
 
         /// <summary>
-        /// The Sun's declination, in degrees.
+        /// The sun's declination, in degrees.
         /// </summary>
         public double DeclinationDegrees => DeclinationRadians * RadDeg;
 
@@ -165,18 +167,6 @@ namespace SunriseCalculator.Classes
         /// Returns the square root of the sum of the squares of the parameters.
         /// </summary>
         private static double Hypotenuse(double x, double y) => Math.Sqrt(Square(x) + Square(y));
-
-        /// <summary>
-        /// Given a value in degrees, returns that value constrained to between 0 and 360 degrees.
-        /// </summary>
-        /// <param name="value">Any value in degrees.</param>
-        /// <returns>The value constrained to the 0 to 360 degree range.</returns>
-        private static double Rev360(double value)
-        {
-            const double revolution = 360.0;
-            double result = value % revolution;
-            return result < 0 ? result + revolution : result;
-        }
 
         /// Given a value in radians, returns that value constrained to between 0 and 2*Pi.
         /// </summary>
